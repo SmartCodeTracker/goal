@@ -6,28 +6,28 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/colegion/goal/utils/path"
-	"github.com/colegion/goal/utils/tool"
+	"github.com/colegion/goal/internal/command"
+	"github.com/colegion/goal/internal/path"
 )
 
 func TestMain_ExistingDir(t *testing.T) {
 	defer expectPanic("Creation of a project in an existing directory should cause a panic.")
-	main(handlers, 0, tool.Data{"./testdata/existingDir"})
+	main(handlers, 0, command.Data{"./testdata/existingDir"})
 }
 
 func TestStart(t *testing.T) {
 	dst := "./testdata/project"
-	main(handlers, 0, tool.Data{dst})
+	main(handlers, 0, command.Data{dst})
 
 	rs1, fn1 := walkFunc(dst)
 	filepath.Walk(dst, fn1)
 
-	p, err := path.ImportToAbsolute("github.com/colegion/goal/internal/skeleton")
+	p, err := path.New("github.com/colegion/goal/internal/skeleton").Package()
 	if err != nil {
 		t.Error(err)
 		t.FailNow()
 	}
-	rs2, err := walk(p)
+	rs2, err := walk(p.String())
 	if err != nil {
 		t.Error(err)
 		t.FailNow()
@@ -58,4 +58,4 @@ func expectPanic(msg string) {
 	}
 }
 
-var handlers = []tool.Handler{Handler}
+var handlers = []command.Handler{Handler}

@@ -3,11 +3,11 @@
 package handlers
 
 import (
-	"github.com/colegion/goal/utils/tool"
+	"github.com/colegion/goal/internal/command"
 )
 
 // Handler is an instance of "generate handlers" subcommand (tool).
-var Handler = tool.Handler{
+var Handler = command.Handler{
 	Run: main,
 
 	Name:  "generate handlers",
@@ -21,7 +21,7 @@ So, you can use the generated package with any router you want.
 
 var input, output, pkg *string
 
-func main(hs []tool.Handler, i int, args tool.Data) {
+func main(hs []command.Handler, i int, args command.Data) {
 	start()
 }
 

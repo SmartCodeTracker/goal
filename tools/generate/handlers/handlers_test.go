@@ -5,11 +5,11 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/colegion/goal/utils/tool"
+	"github.com/colegion/goal/internal/command"
 )
 
 func TestStart(t *testing.T) {
-	main(handlers, 0, tool.Data{})
+	main(handlers, 0, command.Data{})
 
 	cmd := exec.Command("go", "install", "github.com/colegion/goal/tools/generate/handlers/testdata/assets/handlers")
 	cmd.Stderr = os.Stderr // Show the output of the program we run.
@@ -21,11 +21,11 @@ func TestStart(t *testing.T) {
 	os.RemoveAll(*output)
 }
 
-var handlers []tool.Handler
+var handlers []command.Handler
 
 func init() {
 	Handler.Flags.Set("input", "./testdata/controllers")
 	Handler.Flags.Set("output", "./testdata/assets/handlers")
 
-	handlers = []tool.Handler{Handler}
+	handlers = []command.Handler{Handler}
 }

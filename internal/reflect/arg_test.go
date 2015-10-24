@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/colegion/goal/utils/log"
+	"github.com/colegion/goal/log"
 )
 
 func TestArgsFilter(t *testing.T) {

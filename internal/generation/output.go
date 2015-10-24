@@ -10,7 +10,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/colegion/goal/utils/log"
+	"github.com/anonx/sunplate/log"
 )
 
 // Type is a context that stores information that is used for generation
