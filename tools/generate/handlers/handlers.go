@@ -10,8 +10,8 @@ import (
 	"github.com/colegion/goal/internal/action"
 	"github.com/colegion/goal/internal/generation"
 	"github.com/colegion/goal/internal/method"
-	"github.com/colegion/goal/utils/log"
-	"github.com/colegion/goal/utils/path"
+	"github.com/colegion/goal/internal/path"
+	"github.com/colegion/goal/log"
 )
 
 // start is an entry point of the generate handlers command.
@@ -23,21 +23,17 @@ func start() {
 
 	// Start processing of controllers.
 	ps := packages{}
-	absInput, err := path.ImportToAbsolute(*input)
+	absImport, err := path.New(*input).Import()
 	log.AssertNil(err)
-	absImport, err := path.AbsoluteToImport(absInput)
+	absImportOut, err := path.New(*output).Import()
 	log.AssertNil(err)
-	absOutput, err := path.ImportToAbsolute(*output)
-	log.AssertNil(err)
-	absImportOut, err := path.AbsoluteToImport(absOutput)
-	log.AssertNil(err)
-	log.Trace.Printf(`Processing "%s" package...`, absImport)
-	ps.processPackage(absImport)
+	log.Trace.Printf(`Processing "%s" package...`, absImport.String())
+	ps.processPackage(absImport.String())
 
 	// Start generation of handler packages.
-	tpl, err := path.ImportToAbsolute("github.com/colegion/goal/tools/generate/handlers/handlers.go.template")
+	tpl, err := path.New("github.com/colegion/goal/tools/generate/handlers/handlers.go.template").Package()
 	log.AssertNil(err)
-	t := generation.NewType("", tpl)
+	t := generation.NewType("", tpl.String())
 	t.Extension = ".go" // Save generated files as a .go source.
 
 	// Iterate through all available packages and generate handlers for them.
@@ -50,7 +46,7 @@ func start() {
 		// we are saving processed "./controllers" package to "./assets/handlers"
 		// and some "github.com/colegion/smth" to "./assets/handlers/github.com/colegion/smth".
 		out := *output
-		if imp != absImport {
+		if imp != absImport.String() {
 			out = filepath.Join(out, imp)
 		}
 		t.CreateDir(out)
@@ -65,7 +61,7 @@ func start() {
 				// Make sure it is a controller rather than just some embedded struct.
 				check := p.Import
 				if check == "" { // Embedded parent is a local structure.
-					check = absImport
+					check = absImport.String()
 				}
 				if _, ok := ps[check]; !ok { // Such package is not in the list of scanned ones.
 					continue
@@ -95,7 +91,7 @@ func start() {
 				"import":       imp,
 				"input":        input,
 				"name":         name,
-				"outputImport": absImportOut,
+				"outputImport": absImportOut.String(),
 				"output":       output,
 				"package":      pkg,
 				"parents":      cs,

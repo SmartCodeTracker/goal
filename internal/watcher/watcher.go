@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/colegion/goal/utils/log"
+	"github.com/colegion/goal/log"
 
 	"gopkg.in/fsnotify.v1"
 )

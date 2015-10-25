@@ -30,8 +30,13 @@ func (t tRequests) New() *contr.Requests {
 	return c
 }
 
-// Before is a dump method that always returns nil.
+// Before calls (github.com/colegion/contrib/controllers/requests).Requests.Before.
 func (t tRequests) Before(c *contr.Requests, w http.ResponseWriter, r *http.Request) http.Handler {
+	// Call magic Before action of (github.com/colegion/contrib/controllers/requests).Requests.
+	if res := c.Before( // "Binding" parameters.
+	); res != nil {
+		return res
+	}
 	return nil
 }
 
